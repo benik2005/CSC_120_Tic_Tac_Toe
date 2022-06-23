@@ -1,12 +1,14 @@
 #Tic-Tac_Toe
 
+#prints the board
 def printBoard(s):
     print("Printing the board...")
     for i in s:
         print(i)
 
+#Checks for errors and updates the board with the players move
 def placeMarker(r, c, sym):
-    if r > 2 or c > 2:
+    if r > 2 or c > 2 or r < 0 or c < 0:
         print("Invalid input: position not on board!")
         makeMove(currentPlayer)
     elif board[r][c] == 'X' or board[r][c] == 'O':
@@ -16,6 +18,7 @@ def placeMarker(r, c, sym):
         board[r][c] = sym
         printBoard(board)
 
+#collects player input
 def makeMove(player):
     if player == 1:
         print("Player 1's turn. Enter an row to place your X.")
@@ -30,16 +33,92 @@ def makeMove(player):
         col = int(input())
         placeMarker(row - 1, col - 1, 'O')
 
+
+
+#returns winner string, game over boolean(False is game still going)
+def checkWin(state):
+    if state[0][0] == state[0][1] and state[0][1] == state[0][2]:
+        if state[0][0] == "X":
+            return "Player 1 Wins!", True
+        elif state[0][0] == "O":
+            return "Player 2 Wins!", True
+        else:
+            return "No winner yet!", False
+    elif state[1][0] == state[1][1] and state[1][1] == state[1][2]:
+        if state[1][0] == "X":
+            return "Player 1 Wins!", True
+        elif state[1][0] == "O":
+            return "Player 2 Wins!", True
+        else:
+            return "No winner yet!", False
+    elif state[2][0] == state[2][1] and state[2][1] == state[2][2]:
+        if state[2][0] == "X":
+            return "Player 1 Wins!", True
+        elif state[2][0] == "O":
+            return "Player 2 Wins!", True
+        else:
+            return "No winner yet!", False
+    elif state[0][0] == state[1][0] and state[1][0] == state[2][0]:
+        if state[0][0] == "X":
+            return "Player 1 Wins!", True
+        elif state[0][0] == "O":
+            return "Player 2 Wins!", True
+        else:
+            return "No winner yet!", False
+    elif state[0][1] == state[1][1] and state[1][1] == state[2][1]:
+        if state[0][1] == "X":
+            return "Player 1 Wins!", True
+        elif state[0][1] == "O":
+            return "Player 2 Wins!", True
+        else:
+            return "No winner yet!", False
+    elif state[0][2] == state[1][2] and state[1][2] == state[2][2]:
+        if state[0][2] == "X":
+            return "Player 1 Wins!", True
+        elif state[0][2] == "O":
+            return "Player 2 Wins!", True
+        else:
+            return "No winner yet!", False
+    elif state[0][0] == state[1][1] and state[1][1] == state[2][2]:
+        if state[0][0] == "X":
+            return "Player 1 Wins!", True
+        elif state[0][0] == "O":
+            return "Player 2 Wins!", True
+        else:
+            return "No winner yet!", False
+    elif state[0][2] == state[1][1] and state[1][1] == state[2][0]:
+        if state[0][2] == "X":
+            return "Player 1 Wins!", True
+        elif state[0][2] == "O":
+            return "Player 2 Wins!", True
+        else:
+            return "No winner yet!", False
+    else:
+        boardFull = True
+        for i in state:
+            if i.__contains__('-'):
+                boardFull = False
+        if boardFull:
+            return "Draw.", True
+        else:
+            return "No winner yet!", False
+
+
+#game initialization
 board = [['-', '-', '-'],
          ['-', '-', '-'],
          ['-', '-', '-']]
 printBoard(board)
 currentPlayer = 1
 
-while True:
+#game loop
+while not checkWin(board)[1]:
     makeMove(currentPlayer)
     if currentPlayer == 1:
         currentPlayer = 2
     else:
         currentPlayer = 1
+
+    if checkWin(board)[1]:
+        print("Game Over! " + checkWin(board)[0])
 
