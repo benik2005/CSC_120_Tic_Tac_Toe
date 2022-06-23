@@ -1,4 +1,5 @@
 #Tic-Tac_Toe
+import sqlite3
 
 #prints the board
 def printBoard(s):
@@ -104,12 +105,15 @@ def checkWin(state):
             return "No winner yet!", False
 
 
+
 #game initialization
 board = [['-', '-', '-'],
          ['-', '-', '-'],
          ['-', '-', '-']]
 printBoard(board)
 currentPlayer = 1
+
+con = sqlite3.connect('tic_tac_toe.db')
 
 #game loop
 while not checkWin(board)[1]:
@@ -121,4 +125,22 @@ while not checkWin(board)[1]:
 
     if checkWin(board)[1]:
         print("Game Over! " + checkWin(board)[0])
+        con.execute("INSERT INTO game_records(result, date_played) VALUES('" + checkWin(board)[0]+"', DATE('now'));")
+        con.commit()
+
+#print all time results
+cur = con.cursor()
+cur.execute("SELECT gameID FROM game_records WHERE result = 'Player 1 Wins!';")
+player1Wins = cur.fetchall()
+cur.execute("SELECT gameID FROM game_records WHERE result = 'Player 2 Wins!';")
+player2Wins = cur.fetchall()
+cur.execute("SELECT gameID FROM game_records WHERE result = 'Draw.';")
+draws = cur.fetchall()
+
+print("All Time Stats: ")
+print("Player 1 Wins: " + str(len(player1Wins)))
+print("Player 2 Wins: " + str(len(player2Wins)))
+print("Draws: " + str(len(draws)))
+
+con.close()
 
